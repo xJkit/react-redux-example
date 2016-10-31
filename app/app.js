@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import reduxExample from './redux-todo-example'
 
 // Load routes
 import routes from 'routes'
@@ -9,7 +8,9 @@ import routes from 'routes'
 // Load custom css: app.scss
 import 'style!css!sass!applicationStyles'
 
-ReactDOM.render(
-  routes,
-  document.getElementById('app')
-);
+// ReactDOM.render(
+//   routes,
+//   document.getElementById('app')
+// );
+
+import reduxExample from './redux-todo-example'

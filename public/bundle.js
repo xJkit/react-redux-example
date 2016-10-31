@@ -57,22 +57,17 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _reduxTodoExample = __webpack_require__(/*! ./redux-todo-example */ 172);
-	
-	var _reduxTodoExample2 = _interopRequireDefault(_reduxTodoExample);
-	
 	var _routes = __webpack_require__(/*! routes */ 190);
 	
 	var _routes2 = _interopRequireDefault(_routes);
 	
 	__webpack_require__(/*! style!css!sass!applicationStyles */ 256);
 	
+	var _reduxTodoExample = __webpack_require__(/*! ./redux-todo-example */ 172);
+	
+	var _reduxTodoExample2 = _interopRequireDefault(_reduxTodoExample);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	// Load routes
-	_reactDom2['default'].render(_routes2['default'], document.getElementById('app'));
-	
-	// Load custom css: app.scss
 
 /***/ },
 /* 1 */
@@ -21961,25 +21956,13 @@
   \***********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var _redux = __webpack_require__(/*! redux */ 173);
 	
 	// initial state: 先創造 reducer
 	var initialState = {
-	  todos: [{
-	    id: "1st",
-	    title: "Walk the dog",
-	    completed: false
-	  }, {
-	    id: "2nd",
-	    title: "See the movie",
-	    completed: false
-	  }, {
-	    id: "3rd",
-	    title: "Finish the project",
-	    completed: false
-	  }],
+	  todos: [],
 	  searchTerm: "",
 	  showCompleted: false
 	};
@@ -22006,14 +21989,10 @@
 	  return f;
 	}));
 	store.subscribe(function () {
-	  var state = store.getState();
-	  console.log('[state]: searchTerm = ', state.searchTerm);
-	  console.log('[state]: todos = ', state.todos);
+	  document.getElementById('app').innerHTML = store.getState().searchTerm;
 	});
 	
 	// actions
-	
-	
 	store.dispatch({
 	  type: 'CHANGE_SEARCH_TERM',
 	  searchTerm: "hello, world!"
@@ -22033,6 +22012,11 @@
 	    title: 'Install the Redux Devtool',
 	    completed: true
 	  }
+	});
+	
+	store.dispatch({
+	  type: 'CHANGE_SEARCH_TERM',
+	  searchTerm: "REdux!!!"
 	});
 
 /***/ },

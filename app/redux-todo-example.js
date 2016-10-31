@@ -2,21 +2,7 @@ import { createStore, compose } from 'redux'
 
 // initial state: 先創造 reducer
 const initialState = {
-  todos: [
-    {
-      id: "1st",
-      title: "Walk the dog",
-      completed: false
-    }, {
-      id: "2nd",
-      title: "See the movie",
-      completed: false
-    }, {
-      id: "3rd",
-      title: "Finish the project",
-      completed: false
-    }
-  ],
+  todos: [],
   searchTerm: "",
   showCompleted: false
 }
@@ -40,15 +26,11 @@ const reducer = (state = initialState, action) => {
 }
 const store = createStore(reducer, compose(window.devToolsExtension ? window.devToolsExtension() : f => f))
 store.subscribe( () => {
-  const state = store.getState()
-  console.log('[state]: searchTerm = ', state.searchTerm)
-  console.log('[state]: todos = ', state.todos)
+    document.getElementById('app').innerHTML = store.getState().searchTerm
 })
 
 
 // actions
-
-
 store.dispatch({
   type: 'CHANGE_SEARCH_TERM',
   searchTerm: "hello, world!"
@@ -68,4 +50,9 @@ store.dispatch({
     title: 'Install the Redux Devtool',
     completed: true
   }
+})
+
+store.dispatch({
+  type: 'CHANGE_SEARCH_TERM',
+  searchTerm: "REdux!!!"
 })
