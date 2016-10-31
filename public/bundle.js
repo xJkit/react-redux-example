@@ -21988,7 +21988,7 @@
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
 	  var action = arguments[1];
 	
-	  console.log('new action:', action);
+	  console.log('new action: ', action);
 	  switch (action.type) {
 	    case 'CHANGE_SEARCH_TERM':
 	      return Object.assign({}, state, {
@@ -22002,17 +22002,22 @@
 	      return state;
 	  }
 	};
-	var store = (0, _redux.createStore)(reducer);
+	var store = (0, _redux.createStore)(reducer, (0, _redux.compose)(window.devToolsExtension ? window.devToolsExtension() : function (f) {
+	  return f;
+	}));
+	store.subscribe(function () {
+	  var state = store.getState();
+	  console.log('[state]: searchTerm = ', state.searchTerm);
+	  console.log('[state]: todos = ', state.todos);
+	});
 	
-	console.log('[store.getstate()]: ', store.getState());
+	// actions
+	
 	
 	store.dispatch({
 	  type: 'CHANGE_SEARCH_TERM',
 	  searchTerm: "hello, world!"
 	});
-	
-	console.log('[store.getState()]: ', store.getState());
-	
 	store.dispatch({
 	  type: 'ADD_TODO',
 	  todo: {
@@ -22021,8 +22026,14 @@
 	    completed: false
 	  }
 	});
-	
-	console.log('[store.getState()]: ', store.getState());
+	store.dispatch({
+	  type: 'ADD_TODO',
+	  todo: {
+	    id: 'newer',
+	    title: 'Install the Redux Devtool',
+	    completed: true
+	  }
+	});
 
 /***/ },
 /* 173 */

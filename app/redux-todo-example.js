@@ -1,4 +1,4 @@
-import { createStore } from 'redux'
+import { createStore, compose } from 'redux'
 
 // initial state: 先創造 reducer
 const initialState = {
@@ -22,7 +22,7 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
-  console.log('new action:', action)
+  console.log('new action: ', action)
   switch(action.type) {
     case 'CHANGE_SEARCH_TERM':
       return {
@@ -38,17 +38,21 @@ const reducer = (state = initialState, action) => {
       return state
   }
 }
-const store = createStore(reducer)
+const store = createStore(reducer, compose(window.devToolsExtension ? window.devToolsExtension() : f => f))
+store.subscribe( () => {
+  const state = store.getState()
+  console.log('[state]: searchTerm = ', state.searchTerm)
+  console.log('[state]: todos = ', state.todos)
+})
 
-console.log('[store.getstate()]: ', store.getState())
+
+// actions
+
 
 store.dispatch({
   type: 'CHANGE_SEARCH_TERM',
   searchTerm: "hello, world!"
 })
-
-console.log('[store.getState()]: ', store.getState())
-
 store.dispatch({
   type: 'ADD_TODO',
   todo: {
@@ -57,5 +61,11 @@ store.dispatch({
     completed: false
   }
 })
-
-console.log('[store.getState()]: ', store.getState())
+store.dispatch({
+  type: 'ADD_TODO',
+  todo: {
+    id: 'newer',
+    title: 'Install the Redux Devtool',
+    completed: true
+  }
+})
