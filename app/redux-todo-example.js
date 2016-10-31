@@ -22,10 +22,40 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
-  return state
+  console.log('new action:', action)
+  switch(action.type) {
+    case 'CHANGE_SEARCH_TERM':
+      return {
+        ...state,
+        searchTerm: action.searchTerm
+      }
+    case 'ADD_TODO':
+      return {
+        ...state,
+        todos: state.todos.concat(action.todo)
+      }
+    default:
+      return state
+  }
 }
-
 const store = createStore(reducer)
-const currentState = store.getState()
 
-console.log('current todo state: ', currentState)
+console.log('[store.getstate()]: ', store.getState())
+
+store.dispatch({
+  type: 'CHANGE_SEARCH_TERM',
+  searchTerm: "hello, world!"
+})
+
+console.log('[store.getState()]: ', store.getState())
+
+store.dispatch({
+  type: 'ADD_TODO',
+  todo: {
+    id: "new",
+    title: "Finish the action dispatch",
+    completed: false
+  }
+})
+
+console.log('[store.getState()]: ', store.getState())

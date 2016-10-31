@@ -2,7 +2,16 @@ const redux = require('redux')
 // reducers 就是介於 action 與 state 中間的 pure functions
 
 const reducer = (state = {name: "anonymous"}, action) => {
-  return state
+  console.log('new action:', action)
+  switch (action.type) {
+    case 'CHANGE_NAME':
+      return {
+        ...state,
+        name: action.name
+      }
+    default:
+      return state
+  }
 }
 
 // reducer has default state
@@ -10,4 +19,21 @@ const reducer = (state = {name: "anonymous"}, action) => {
 
 const store = redux.createStore(reducer)
 const currentState = store.getState()
+
 console.log('currentState: ', currentState)
+
+// action object
+store.dispatch({
+  type: 'CHANGE_NAME',
+  name: "Jay"
+})
+
+console.log('newState: ', store.getState())
+
+store.dispatch({
+  type: 'CHANGE_NAME',
+  name: "Faye!"
+})
+
+
+console.log('newState: ', store.getState())
