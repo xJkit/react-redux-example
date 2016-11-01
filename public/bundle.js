@@ -63,7 +63,7 @@
 	
 	__webpack_require__(/*! style!css!sass!applicationStyles */ 238);
 	
-	var _reduxMovie = __webpack_require__(/*! ./redux-movie */ 260);
+	var _reduxMovie = __webpack_require__(/*! ./redux-movie */ 242);
 	
 	var _reduxMovie2 = _interopRequireDefault(_reduxMovie);
 
@@ -28302,7 +28302,114 @@
 
 
 /***/ },
-/* 242 */,
+/* 242 */
+/*!****************************!*\
+  !*** ./app/redux-movie.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _redux = __webpack_require__(/*! redux */ 243);
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	/********** reducers *******/
+	var movieReducer = function movieReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case 'ADD_MOVIE':
+	      return [].concat(_toConsumableArray(state), [{
+	        title: action.title,
+	        year: action.year,
+	        platforms: action.platforms
+	      }]);
+	    case 'REMOVE_MOVIE':
+	      return state.filter(function (movie) {
+	        return movie.title !== action.title;
+	      });
+	    default:
+	      return state;
+	  }
+	};
+	
+	var hobbyReducer = function hobbyReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case 'ADD_HOBBY':
+	      return [].concat(_toConsumableArray(state), [{
+	        category: action.category,
+	        name: action.name
+	      }]);
+	    case 'REMOVE_HOBBY':
+	      return state.filter(function (hobby) {
+	        return hobby.name !== action.name;
+	      });
+	    default:
+	      return state;
+	  }
+	};
+	
+	var rootReducer = (0, _redux.combineReducers)({
+	  movies: movieReducer,
+	  hobbies: hobbyReducer
+	});
+	/***************************/
+	
+	var store = (0, _redux.createStore)(rootReducer, (0, _redux.compose)(window.devToolsExtension ? window.devToolsExtension() : function (f) {
+	  return f;
+	}));
+	
+	/******** actions *******/
+	
+	store.dispatch({
+	  type: 'ADD_MOVIE',
+	  title: "Harry Potter and the Chamber of Secrets",
+	  year: 2002,
+	  platforms: ["Windows", "macOS"]
+	});
+	
+	store.dispatch({
+	  type: 'ADD_MOVIE',
+	  title: "Harry Potter Quidditch World Cup",
+	  year: 2003,
+	  platforms: ["Windows"]
+	});
+	
+	store.dispatch({
+	  type: 'ADD_HOBBY',
+	  category: "Miscellaneous",
+	  name: "Watch the stars"
+	});
+	
+	store.dispatch({
+	  type: 'ADD_HOBBY',
+	  category: "Sport",
+	  name: "Jogging"
+	});
+	
+	store.dispatch({
+	  type: 'ADD_HOBBY',
+	  category: "Sport",
+	  name: "Basketball"
+	});
+	
+	// remove actions
+	store.dispatch({
+	  type: 'REMOVE_MOVIE',
+	  title: "Harry Potter and the Chamber of Secrets"
+	});
+	
+	store.dispatch({
+	  type: 'REMOVE_HOBBY',
+	  name: 'Jogging'
+	});
+
+/***/ },
 /* 243 */
 /*!******************************!*\
   !*** ./~/redux/lib/index.js ***!
@@ -29228,99 +29335,6 @@
 	    }, last.apply(undefined, arguments));
 	  };
 	}
-
-/***/ },
-/* 260 */
-/*!****************************!*\
-  !*** ./app/redux-movie.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var _redux = __webpack_require__(/*! redux */ 243);
-	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
-	var stateDefault = {
-	  movies: [{
-	    title: "Harry Potter and the Philosopher's Stone",
-	    year: 2001,
-	    platforms: ["Windows", "macOS"]
-	  }],
-	  hobbies: [{
-	    category: "Sport",
-	    name: "Basketball"
-	  }, {
-	    category: "Music",
-	    name: "Drum Kit"
-	  }]
-	};
-	var movieId = 1;
-	var reducer = function reducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : stateDefault;
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	    case 'ADD_MOVIE':
-	      return Object.assign({}, state, {
-	        movies: [].concat(_toConsumableArray(state.movies), [{
-	          id: movieId++,
-	          title: action.movie.title,
-	          year: action.movie.year,
-	          platforms: action.movie.platforms
-	        }])
-	      });
-	    case 'ADD_HOBBY':
-	      return Object.assign({}, state, {
-	        hobbies: [].concat(_toConsumableArray(state.hobbies), [action.hobby])
-	      });
-	    case 'REMOVE_MOVIE':
-	      return Object.assign({}, state, {
-	        movies: state.movies.filter(function (movie) {
-	          return movie.title !== action.title;
-	        })
-	      });
-	    default:
-	      return state;
-	  }
-	};
-	
-	var store = (0, _redux.createStore)(reducer, (0, _redux.compose)(window.devToolsExtension ? window.devToolsExtension() : function (f) {
-	  return f;
-	}));
-	console.log('state: ', store.getState());
-	store.dispatch({
-	  type: 'ADD_MOVIE',
-	  movie: {
-	    title: "Harry Potter and the Chamber of Secrets",
-	    year: 2002,
-	    platforms: ["Windows", "macOS"]
-	  }
-	});
-	
-	store.dispatch({
-	  type: 'ADD_MOVIE',
-	  movie: {
-	    title: "Harry Potter Quidditch World Cup",
-	    year: 2003,
-	    platforms: ["Windows"]
-	  }
-	});
-	
-	store.dispatch({
-	  type: 'ADD_HOBBY',
-	  hobby: {
-	    category: "Miscellaneous",
-	    name: "Watch the stars"
-	  }
-	});
-	
-	// remove a movie
-	store.dispatch({
-	  type: 'REMOVE_MOVIE',
-	  title: "Harry Potter and the Chamber of Secrets"
-	});
 
 /***/ }
 /******/ ]);
