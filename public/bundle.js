@@ -28314,7 +28314,7 @@
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
-	/********** reducers *******/
+	/********** reducers & action generators *******/
 	var movieReducer = function movieReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 	  var action = arguments[1];
@@ -28334,6 +28334,23 @@
 	      return state;
 	  }
 	};
+	var addMovie = function addMovie(title, year, platforms) {
+	  return {
+	    type: 'ADD_MOVIE',
+	    title: title,
+	    year: year,
+	    platforms: platforms
+	  };
+	};
+	
+	var removeMovie = function removeMovie(title) {
+	  return {
+	    type: 'REMOVE_MOVIE',
+	    title: title
+	  };
+	};
+	
+	//-----
 	
 	var hobbyReducer = function hobbyReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
@@ -28354,6 +28371,23 @@
 	  }
 	};
 	
+	var addHobby = function addHobby(category, name) {
+	  return {
+	    type: 'ADD_HOBBY',
+	    category: category,
+	    name: name
+	  };
+	};
+	
+	var removeHobby = function removeHobby(name) {
+	  return {
+	    type: 'REMOVE_HOBBY',
+	    name: name
+	  };
+	};
+	
+	//------
+	
 	var rootReducer = (0, _redux.combineReducers)({
 	  movies: movieReducer,
 	  hobbies: hobbyReducer
@@ -28365,49 +28399,13 @@
 	}));
 	
 	/******** actions *******/
-	
-	store.dispatch({
-	  type: 'ADD_MOVIE',
-	  title: "Harry Potter and the Chamber of Secrets",
-	  year: 2002,
-	  platforms: ["Windows", "macOS"]
-	});
-	
-	store.dispatch({
-	  type: 'ADD_MOVIE',
-	  title: "Harry Potter Quidditch World Cup",
-	  year: 2003,
-	  platforms: ["Windows"]
-	});
-	
-	store.dispatch({
-	  type: 'ADD_HOBBY',
-	  category: "Miscellaneous",
-	  name: "Watch the stars"
-	});
-	
-	store.dispatch({
-	  type: 'ADD_HOBBY',
-	  category: "Sport",
-	  name: "Jogging"
-	});
-	
-	store.dispatch({
-	  type: 'ADD_HOBBY',
-	  category: "Sport",
-	  name: "Basketball"
-	});
-	
-	// remove actions
-	store.dispatch({
-	  type: 'REMOVE_MOVIE',
-	  title: "Harry Potter and the Chamber of Secrets"
-	});
-	
-	store.dispatch({
-	  type: 'REMOVE_HOBBY',
-	  name: 'Jogging'
-	});
+	store.dispatch(addMovie("Harry Potter and the Chamber of Secrets", 2002, ["Windows", "macOS"]));
+	store.dispatch(addMovie("Harry Potter Quidditch World Cup", 2003, ["Windows"]));
+	store.dispatch(addHobby("Miscellaneous", "Watch the stars"));
+	store.dispatch(addHobby("Sport", "Jogging"));
+	store.dispatch(addHobby("Sport", "Basketball"));
+	store.dispatch(removeMovie("Harry Potter and the Chamber of Secrets"));
+	store.dispatch(removeHobby("Jogging"));
 
 /***/ },
 /* 243 */

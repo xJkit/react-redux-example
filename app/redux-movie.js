@@ -1,6 +1,6 @@
 import { createStore, compose, combineReducers } from 'redux'
 
-/********** reducers *******/
+/********** reducers & action generators *******/
 const movieReducer = (state = [], action) => {
   switch(action.type) {
     case 'ADD_MOVIE':
@@ -18,6 +18,23 @@ const movieReducer = (state = [], action) => {
       return state
   }
 }
+const addMovie = (title, year, platforms) => {
+  return {
+    type: 'ADD_MOVIE',
+    title,
+    year,
+    platforms
+  }
+}
+
+const removeMovie = (title) => {
+  return {
+    type: 'REMOVE_MOVIE',
+    title
+  }
+}
+
+//-----
 
 const hobbyReducer = (state = [], action) => {
   switch(action.type) {
@@ -36,6 +53,23 @@ const hobbyReducer = (state = [], action) => {
   }
 }
 
+const addHobby = (category, name) => {
+  return {
+    type: 'ADD_HOBBY',
+    category,
+    name
+  }
+}
+
+const removeHobby = (name) => {
+  return {
+    type: 'REMOVE_HOBBY',
+    name
+  }
+}
+
+//------
+
 const rootReducer = combineReducers({
   movies: movieReducer,
   hobbies: hobbyReducer
@@ -45,47 +79,10 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer, compose(window.devToolsExtension ?window.devToolsExtension(): f => f))
 
 /******** actions *******/
-
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: "Harry Potter and the Chamber of Secrets",
-  year: 2002,
-  platforms: ["Windows", "macOS"]
-})
-
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: "Harry Potter Quidditch World Cup",
-  year: 2003,
-  platforms: ["Windows"]
-})
-
-store.dispatch({
-  type: 'ADD_HOBBY',
-  category: "Miscellaneous",
-  name: "Watch the stars"
-})
-
-store.dispatch({
-  type: 'ADD_HOBBY',
-  category: "Sport",
-  name: "Jogging"
-})
-
-store.dispatch({
-  type: 'ADD_HOBBY',
-  category: "Sport",
-  name: "Basketball"
-})
-
-
-// remove actions
-store.dispatch({
-  type: 'REMOVE_MOVIE',
-  title: "Harry Potter and the Chamber of Secrets"
-})
-
-store.dispatch({
-  type: 'REMOVE_HOBBY',
-  name: 'Jogging'
-})
+store.dispatch( addMovie("Harry Potter and the Chamber of Secrets", 2002, ["Windows", "macOS"]) )
+store.dispatch( addMovie("Harry Potter Quidditch World Cup", 2003, ["Windows"]))
+store.dispatch( addHobby("Miscellaneous", "Watch the stars"))
+store.dispatch( addHobby("Sport", "Jogging"))
+store.dispatch( addHobby("Sport", "Basketball"))
+store.dispatch( removeMovie("Harry Potter and the Chamber of Secrets"))
+store.dispatch( removeHobby("Jogging"))
