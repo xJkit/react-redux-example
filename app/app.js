@@ -13,4 +13,4 @@ import 'style!css!sass!applicationStyles'
 //   document.getElementById('app')
 // );
 
-import reduxExample from './redux-todo-example'
+import reduxExample from './redux-movie'

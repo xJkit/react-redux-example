@@ -18,7 +18,10 @@ const reducer = (state = initialState, action) => {
     case 'ADD_TODO':
       return {
         ...state,
-        todos: state.todos.concat(action.todo)
+        todos: [
+          ...state.todos,
+          action.todo
+        ]
       }
     default:
       return state
