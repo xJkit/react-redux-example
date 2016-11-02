@@ -1,4 +1,5 @@
 import { createStore, compose, combineReducers } from 'redux'
+import axios from 'axios'
 
 /********** reducers & action generators *******/
 const movieReducer = (state = [], action) => {
@@ -69,10 +70,58 @@ const removeHobby = (name) => {
 }
 
 //------
+const mapReducer = (state = {isFetching: false, url: undefined}, action) => {
+  switch(action.type) {
+    case 'START_FETCHING':
+      return {
+        isFetching: true,
+        url: undefined
+      }
+    case 'COMPLETE_FETCHING':
+      return {
+        isFetching: false,
+        url: action.url
+      }
+    default:
+      return state
+  }
+}
 
+const startFetching = () => {
+  return {
+    type: 'START_FETCHING',
+  }
+}
+
+const completeFetching = (url) => {
+  return {
+    type: 'COMPLETE_FETCHING',
+    url
+  }
+}
+
+const fetchLocationFromIpInfo = () => {
+  const url_info = 'http://ipinfo.io/json'
+  store.dispatch(startFetching())
+  axios.get(url_info)
+    .then(res => {
+      return res.data.loc
+    })
+    .then( loc => {
+      const url_loc = 'http://maps.google.com?q=' + loc
+      store.dispatch( completeFetching(url_loc) )
+    })
+    .catch( err => {
+      return new Error('error location')
+    })
+}
+
+
+//------
 const rootReducer = combineReducers({
   movies: movieReducer,
-  hobbies: hobbyReducer
+  hobbies: hobbyReducer,
+  maps: mapReducer
 })
 /***************************/
 
@@ -86,3 +135,4 @@ store.dispatch( addHobby("Sport", "Jogging"))
 store.dispatch( addHobby("Sport", "Basketball"))
 store.dispatch( removeMovie("Harry Potter and the Chamber of Secrets"))
 store.dispatch( removeHobby("Jogging"))
+fetchLocationFromIpInfo()
