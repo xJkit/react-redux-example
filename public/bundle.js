@@ -28310,159 +28310,73 @@
 
 	'use strict';
 	
-	var _redux = __webpack_require__(/*! redux */ 243);
+	var _configureStore = __webpack_require__(/*! ./store/configureStore */ 243);
 	
-	var _axios = __webpack_require__(/*! axios */ 260);
+	var _index = __webpack_require__(/*! ./actions/index.js */ 263);
 	
-	var _axios2 = _interopRequireDefault(_axios);
+	var actions = _interopRequireWildcard(_index);
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
-	/********** reducers & action generators *******/
-	var movieReducer = function movieReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	    case 'ADD_MOVIE':
-	      return [].concat(_toConsumableArray(state), [{
-	        title: action.title,
-	        year: action.year,
-	        platforms: action.platforms
-	      }]);
-	    case 'REMOVE_MOVIE':
-	      return state.filter(function (movie) {
-	        return movie.title !== action.title;
-	      });
-	    default:
-	      return state;
-	  }
-	};
-	var addMovie = function addMovie(title, year, platforms) {
-	  return {
-	    type: 'ADD_MOVIE',
-	    title: title,
-	    year: year,
-	    platforms: platforms
-	  };
-	};
-	
-	var removeMovie = function removeMovie(title) {
-	  return {
-	    type: 'REMOVE_MOVIE',
-	    title: title
-	  };
-	};
-	
-	//-----
-	
-	var hobbyReducer = function hobbyReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	    case 'ADD_HOBBY':
-	      return [].concat(_toConsumableArray(state), [{
-	        category: action.category,
-	        name: action.name
-	      }]);
-	    case 'REMOVE_HOBBY':
-	      return state.filter(function (hobby) {
-	        return hobby.name !== action.name;
-	      });
-	    default:
-	      return state;
-	  }
-	};
-	
-	var addHobby = function addHobby(category, name) {
-	  return {
-	    type: 'ADD_HOBBY',
-	    category: category,
-	    name: name
-	  };
-	};
-	
-	var removeHobby = function removeHobby(name) {
-	  return {
-	    type: 'REMOVE_HOBBY',
-	    name: name
-	  };
-	};
-	
-	//------
-	var mapReducer = function mapReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { isFetching: false, url: undefined };
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	    case 'START_FETCHING':
-	      return {
-	        isFetching: true,
-	        url: undefined
-	      };
-	    case 'COMPLETE_FETCHING':
-	      return {
-	        isFetching: false,
-	        url: action.url
-	      };
-	    default:
-	      return state;
-	  }
-	};
-	
-	var startFetching = function startFetching() {
-	  return {
-	    type: 'START_FETCHING'
-	  };
-	};
-	
-	var completeFetching = function completeFetching(url) {
-	  return {
-	    type: 'COMPLETE_FETCHING',
-	    url: url
-	  };
-	};
-	
-	var fetchLocationFromIpInfo = function fetchLocationFromIpInfo() {
-	  var url_info = 'http://ipinfo.io/json';
-	  store.dispatch(startFetching());
-	  _axios2['default'].get(url_info).then(function (res) {
-	    return res.data.loc;
-	  }).then(function (loc) {
-	    var url_loc = 'http://maps.google.com?q=' + loc;
-	    store.dispatch(completeFetching(url_loc));
-	  })['catch'](function (err) {
-	    return new Error('error location');
-	  });
-	};
-	
-	//------
-	var rootReducer = (0, _redux.combineReducers)({
-	  movies: movieReducer,
-	  hobbies: hobbyReducer,
-	  maps: mapReducer
-	});
+	var store = (0, _configureStore.configure)();
 	/***************************/
 	
-	var store = (0, _redux.createStore)(rootReducer, (0, _redux.compose)(window.devToolsExtension ? window.devToolsExtension() : function (f) {
-	  return f;
-	}));
-	
 	/******** actions *******/
-	store.dispatch(addMovie("Harry Potter and the Chamber of Secrets", 2002, ["Windows", "macOS"]));
-	store.dispatch(addMovie("Harry Potter Quidditch World Cup", 2003, ["Windows"]));
-	store.dispatch(addHobby("Miscellaneous", "Watch the stars"));
-	store.dispatch(addHobby("Sport", "Jogging"));
-	store.dispatch(addHobby("Sport", "Basketball"));
-	store.dispatch(removeMovie("Harry Potter and the Chamber of Secrets"));
-	store.dispatch(removeHobby("Jogging"));
-	fetchLocationFromIpInfo();
+	store.dispatch(actions.addMovie("Harry Potter and the Chamber of Secrets", 2002, ["Windows", "macOS"]));
+	store.dispatch(actions.addMovie("Harry Potter Quidditch World Cup", 2003, ["Windows"]));
+	store.dispatch(actions.addHobby("Miscellaneous", "Watch the stars"));
+	store.dispatch(actions.addHobby("Sport", "Jogging"));
+	store.dispatch(actions.addHobby("Sport", "Basketball"));
+	store.dispatch(actions.removeMovie("Harry Potter and the Chamber of Secrets"));
+	store.dispatch(actions.removeHobby("Jogging"));
+	
+	// without thunk
+	/*
+	  actions.fetchLocationFromIpInfo()
+	*/
+	// with thunk
+	store.dispatch(actions.fetchLocationFromIpInfo());
 
 /***/ },
 /* 243 */
+/*!*************************************!*\
+  !*** ./app/store/configureStore.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.configure = undefined;
+	
+	var _redux = __webpack_require__(/*! redux */ 244);
+	
+	var _reduxThunk = __webpack_require__(/*! redux-thunk */ 261);
+	
+	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+	
+	var _index = __webpack_require__(/*! ./../reducers/index */ 262);
+	
+	var reducers = _interopRequireWildcard(_index);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var configure = exports.configure = function configure() {
+	  var rootReducer = (0, _redux.combineReducers)(Object.assign({}, reducers));
+	
+	  var store = (0, _redux.createStore)(rootReducer, (0, _redux.compose)((0, _redux.applyMiddleware)(_reduxThunk2['default']), window.devToolsExtension ? window.devToolsExtension() : function (f) {
+	    return f;
+	  }));
+	
+	  return store;
+	};
+
+/***/ },
+/* 244 */
 /*!******************************!*\
   !*** ./~/redux/lib/index.js ***!
   \******************************/
@@ -28473,27 +28387,27 @@
 	exports.__esModule = true;
 	exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
 	
-	var _createStore = __webpack_require__(/*! ./createStore */ 244);
+	var _createStore = __webpack_require__(/*! ./createStore */ 245);
 	
 	var _createStore2 = _interopRequireDefault(_createStore);
 	
-	var _combineReducers = __webpack_require__(/*! ./combineReducers */ 255);
+	var _combineReducers = __webpack_require__(/*! ./combineReducers */ 256);
 	
 	var _combineReducers2 = _interopRequireDefault(_combineReducers);
 	
-	var _bindActionCreators = __webpack_require__(/*! ./bindActionCreators */ 257);
+	var _bindActionCreators = __webpack_require__(/*! ./bindActionCreators */ 258);
 	
 	var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
 	
-	var _applyMiddleware = __webpack_require__(/*! ./applyMiddleware */ 258);
+	var _applyMiddleware = __webpack_require__(/*! ./applyMiddleware */ 259);
 	
 	var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 	
-	var _compose = __webpack_require__(/*! ./compose */ 259);
+	var _compose = __webpack_require__(/*! ./compose */ 260);
 	
 	var _compose2 = _interopRequireDefault(_compose);
 	
-	var _warning = __webpack_require__(/*! ./utils/warning */ 256);
+	var _warning = __webpack_require__(/*! ./utils/warning */ 257);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -28517,7 +28431,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 3)))
 
 /***/ },
-/* 244 */
+/* 245 */
 /*!************************************!*\
   !*** ./~/redux/lib/createStore.js ***!
   \************************************/
@@ -28529,7 +28443,7 @@
 	exports.ActionTypes = undefined;
 	exports["default"] = createStore;
 	
-	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 245);
+	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 246);
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
@@ -28741,15 +28655,15 @@
 	}
 
 /***/ },
-/* 245 */
+/* 246 */
 /*!***********************************!*\
   !*** ./~/lodash/isPlainObject.js ***!
   \***********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ 246),
-	    getPrototype = __webpack_require__(/*! ./_getPrototype */ 252),
-	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 254);
+	var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ 247),
+	    getPrototype = __webpack_require__(/*! ./_getPrototype */ 253),
+	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 255);
 	
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -28812,15 +28726,15 @@
 
 
 /***/ },
-/* 246 */
+/* 247 */
 /*!*********************************!*\
   !*** ./~/lodash/_baseGetTag.js ***!
   \*********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var Symbol = __webpack_require__(/*! ./_Symbol */ 247),
-	    getRawTag = __webpack_require__(/*! ./_getRawTag */ 250),
-	    objectToString = __webpack_require__(/*! ./_objectToString */ 251);
+	var Symbol = __webpack_require__(/*! ./_Symbol */ 248),
+	    getRawTag = __webpack_require__(/*! ./_getRawTag */ 251),
+	    objectToString = __webpack_require__(/*! ./_objectToString */ 252);
 	
 	/** `Object#toString` result references. */
 	var nullTag = '[object Null]',
@@ -28850,13 +28764,13 @@
 
 
 /***/ },
-/* 247 */
+/* 248 */
 /*!*****************************!*\
   !*** ./~/lodash/_Symbol.js ***!
   \*****************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var root = __webpack_require__(/*! ./_root */ 248);
+	var root = __webpack_require__(/*! ./_root */ 249);
 	
 	/** Built-in value references. */
 	var Symbol = root.Symbol;
@@ -28865,13 +28779,13 @@
 
 
 /***/ },
-/* 248 */
+/* 249 */
 /*!***************************!*\
   !*** ./~/lodash/_root.js ***!
   \***************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var freeGlobal = __webpack_require__(/*! ./_freeGlobal */ 249);
+	var freeGlobal = __webpack_require__(/*! ./_freeGlobal */ 250);
 	
 	/** Detect free variable `self`. */
 	var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
@@ -28883,7 +28797,7 @@
 
 
 /***/ },
-/* 249 */
+/* 250 */
 /*!*********************************!*\
   !*** ./~/lodash/_freeGlobal.js ***!
   \*********************************/
@@ -28897,13 +28811,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 250 */
+/* 251 */
 /*!********************************!*\
   !*** ./~/lodash/_getRawTag.js ***!
   \********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var Symbol = __webpack_require__(/*! ./_Symbol */ 247);
+	var Symbol = __webpack_require__(/*! ./_Symbol */ 248);
 	
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -28952,7 +28866,7 @@
 
 
 /***/ },
-/* 251 */
+/* 252 */
 /*!*************************************!*\
   !*** ./~/lodash/_objectToString.js ***!
   \*************************************/
@@ -28983,13 +28897,13 @@
 
 
 /***/ },
-/* 252 */
+/* 253 */
 /*!***********************************!*\
   !*** ./~/lodash/_getPrototype.js ***!
   \***********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var overArg = __webpack_require__(/*! ./_overArg */ 253);
+	var overArg = __webpack_require__(/*! ./_overArg */ 254);
 	
 	/** Built-in value references. */
 	var getPrototype = overArg(Object.getPrototypeOf, Object);
@@ -28998,7 +28912,7 @@
 
 
 /***/ },
-/* 253 */
+/* 254 */
 /*!******************************!*\
   !*** ./~/lodash/_overArg.js ***!
   \******************************/
@@ -29022,7 +28936,7 @@
 
 
 /***/ },
-/* 254 */
+/* 255 */
 /*!**********************************!*\
   !*** ./~/lodash/isObjectLike.js ***!
   \**********************************/
@@ -29060,7 +28974,7 @@
 
 
 /***/ },
-/* 255 */
+/* 256 */
 /*!****************************************!*\
   !*** ./~/redux/lib/combineReducers.js ***!
   \****************************************/
@@ -29071,13 +28985,13 @@
 	exports.__esModule = true;
 	exports["default"] = combineReducers;
 	
-	var _createStore = __webpack_require__(/*! ./createStore */ 244);
+	var _createStore = __webpack_require__(/*! ./createStore */ 245);
 	
-	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 245);
+	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 246);
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _warning = __webpack_require__(/*! ./utils/warning */ 256);
+	var _warning = __webpack_require__(/*! ./utils/warning */ 257);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -29196,7 +29110,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 3)))
 
 /***/ },
-/* 256 */
+/* 257 */
 /*!**************************************!*\
   !*** ./~/redux/lib/utils/warning.js ***!
   \**************************************/
@@ -29228,7 +29142,7 @@
 	}
 
 /***/ },
-/* 257 */
+/* 258 */
 /*!*******************************************!*\
   !*** ./~/redux/lib/bindActionCreators.js ***!
   \*******************************************/
@@ -29287,7 +29201,7 @@
 	}
 
 /***/ },
-/* 258 */
+/* 259 */
 /*!****************************************!*\
   !*** ./~/redux/lib/applyMiddleware.js ***!
   \****************************************/
@@ -29300,7 +29214,7 @@
 	exports.__esModule = true;
 	exports["default"] = applyMiddleware;
 	
-	var _compose = __webpack_require__(/*! ./compose */ 259);
+	var _compose = __webpack_require__(/*! ./compose */ 260);
 	
 	var _compose2 = _interopRequireDefault(_compose);
 	
@@ -29352,7 +29266,7 @@
 	}
 
 /***/ },
-/* 259 */
+/* 260 */
 /*!********************************!*\
   !*** ./~/redux/lib/compose.js ***!
   \********************************/
@@ -29389,16 +29303,222 @@
 	}
 
 /***/ },
-/* 260 */
+/* 261 */
+/*!************************************!*\
+  !*** ./~/redux-thunk/lib/index.js ***!
+  \************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	function createThunkMiddleware(extraArgument) {
+	  return function (_ref) {
+	    var dispatch = _ref.dispatch;
+	    var getState = _ref.getState;
+	    return function (next) {
+	      return function (action) {
+	        if (typeof action === 'function') {
+	          return action(dispatch, getState, extraArgument);
+	        }
+	
+	        return next(action);
+	      };
+	    };
+	  };
+	}
+	
+	var thunk = createThunkMiddleware();
+	thunk.withExtraArgument = createThunkMiddleware;
+	
+	exports['default'] = thunk;
+
+/***/ },
+/* 262 */
+/*!*******************************!*\
+  !*** ./app/reducers/index.js ***!
+  \*******************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	var movieReducer = exports.movieReducer = function movieReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case 'ADD_MOVIE':
+	      return [].concat(_toConsumableArray(state), [{
+	        title: action.title,
+	        year: action.year,
+	        platforms: action.platforms
+	      }]);
+	    case 'REMOVE_MOVIE':
+	      return state.filter(function (movie) {
+	        return movie.title !== action.title;
+	      });
+	    default:
+	      return state;
+	  }
+	};
+	
+	var hobbyReducer = exports.hobbyReducer = function hobbyReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case 'ADD_HOBBY':
+	      return [].concat(_toConsumableArray(state), [{
+	        category: action.category,
+	        name: action.name
+	      }]);
+	    case 'REMOVE_HOBBY':
+	      return state.filter(function (hobby) {
+	        return hobby.name !== action.name;
+	      });
+	    default:
+	      return state;
+	  }
+	};
+	
+	var mapReducer = exports.mapReducer = function mapReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { isFetching: false, url: undefined };
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case 'START_FETCHING':
+	      return {
+	        isFetching: true,
+	        url: undefined
+	      };
+	    case 'COMPLETE_FETCHING':
+	      return {
+	        isFetching: false,
+	        url: action.url
+	      };
+	    default:
+	      return state;
+	  }
+	};
+
+/***/ },
+/* 263 */
+/*!******************************!*\
+  !*** ./app/actions/index.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.fetchLocationFromIpInfo = exports.completeFetching = exports.startFetching = exports.removeHobby = exports.addHobby = exports.removeMovie = exports.addMovie = undefined;
+	
+	var _axios = __webpack_require__(/*! axios */ 264);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var addMovie = exports.addMovie = function addMovie(title, year, platforms) {
+	  return {
+	    type: 'ADD_MOVIE',
+	    title: title,
+	    year: year,
+	    platforms: platforms
+	  };
+	}; //index of action creators in actions
+	var removeMovie = exports.removeMovie = function removeMovie(title) {
+	  return {
+	    type: 'REMOVE_MOVIE',
+	    title: title
+	  };
+	};
+	
+	var addHobby = exports.addHobby = function addHobby(category, name) {
+	  return {
+	    type: 'ADD_HOBBY',
+	    category: category,
+	    name: name
+	  };
+	};
+	
+	var removeHobby = exports.removeHobby = function removeHobby(name) {
+	  return {
+	    type: 'REMOVE_HOBBY',
+	    name: name
+	  };
+	};
+	
+	var startFetching = exports.startFetching = function startFetching() {
+	  return {
+	    type: 'START_FETCHING'
+	  };
+	};
+	
+	var completeFetching = exports.completeFetching = function completeFetching(url) {
+	  return {
+	    type: 'COMPLETE_FETCHING',
+	    url: url
+	  };
+	};
+	
+	// async actions below
+	// you need thunk
+	
+	//---- without thunk ----
+	/*
+	export const fetchLocationFromIpInfo = () => {
+	  const url_info = 'http://ipinfo.io/json'
+	  store.dispatch(startFetching())
+	  axios.get(url_info)
+	    .then(res => {
+	      return res.data.loc
+	    })
+	    .then( loc => {
+	      const url_loc = 'http://maps.google.com?q=' + loc
+	      store.dispatch( completeFetching(url_loc) )
+	    })
+	    .catch( err => {
+	      return new Error('error location')
+	    })
+	}
+	*/
+	
+	//----- with thunk ------
+	var fetchLocationFromIpInfo = exports.fetchLocationFromIpInfo = function fetchLocationFromIpInfo() {
+	  return function (dispatch, getState) {
+	    var url_info = 'http://ipinfo.io/json';
+	    dispatch(startFetching());
+	    _axios2['default'].get(url_info).then(function (res) {
+	      return res.data.loc;
+	    }).then(function (loc) {
+	      var url_loc = 'http://maps.google.com?q=' + loc;
+	      dispatch(completeFetching(url_loc));
+	    })['catch'](function (err) {
+	      return new Error('error location');
+	    });
+	  };
+	};
+
+/***/ },
+/* 264 */
 /*!**************************!*\
   !*** ./~/axios/index.js ***!
   \**************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(/*! ./lib/axios */ 261);
+	module.exports = __webpack_require__(/*! ./lib/axios */ 265);
 
 /***/ },
-/* 261 */
+/* 265 */
 /*!******************************!*\
   !*** ./~/axios/lib/axios.js ***!
   \******************************/
@@ -29406,14 +29526,14 @@
 
 	'use strict';
 	
-	var defaults = __webpack_require__(/*! ./defaults */ 262);
-	var utils = __webpack_require__(/*! ./utils */ 263);
-	var dispatchRequest = __webpack_require__(/*! ./core/dispatchRequest */ 264);
-	var InterceptorManager = __webpack_require__(/*! ./core/InterceptorManager */ 272);
-	var isAbsoluteURL = __webpack_require__(/*! ./helpers/isAbsoluteURL */ 273);
-	var combineURLs = __webpack_require__(/*! ./helpers/combineURLs */ 274);
-	var bind = __webpack_require__(/*! ./helpers/bind */ 275);
-	var transformData = __webpack_require__(/*! ./helpers/transformData */ 268);
+	var defaults = __webpack_require__(/*! ./defaults */ 266);
+	var utils = __webpack_require__(/*! ./utils */ 267);
+	var dispatchRequest = __webpack_require__(/*! ./core/dispatchRequest */ 268);
+	var InterceptorManager = __webpack_require__(/*! ./core/InterceptorManager */ 276);
+	var isAbsoluteURL = __webpack_require__(/*! ./helpers/isAbsoluteURL */ 277);
+	var combineURLs = __webpack_require__(/*! ./helpers/combineURLs */ 278);
+	var bind = __webpack_require__(/*! ./helpers/bind */ 279);
+	var transformData = __webpack_require__(/*! ./helpers/transformData */ 272);
 	
 	function Axios(defaultConfig) {
 	  this.defaults = utils.merge({}, defaultConfig);
@@ -29496,7 +29616,7 @@
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(/*! ./helpers/spread */ 276);
+	axios.spread = __webpack_require__(/*! ./helpers/spread */ 280);
 	
 	// Expose interceptors
 	axios.interceptors = defaultInstance.interceptors;
@@ -29527,7 +29647,7 @@
 
 
 /***/ },
-/* 262 */
+/* 266 */
 /*!*********************************!*\
   !*** ./~/axios/lib/defaults.js ***!
   \*********************************/
@@ -29535,7 +29655,7 @@
 
 	'use strict';
 	
-	var utils = __webpack_require__(/*! ./utils */ 263);
+	var utils = __webpack_require__(/*! ./utils */ 267);
 	
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -29599,7 +29719,7 @@
 
 
 /***/ },
-/* 263 */
+/* 267 */
 /*!******************************!*\
   !*** ./~/axios/lib/utils.js ***!
   \******************************/
@@ -29852,7 +29972,7 @@
 
 
 /***/ },
-/* 264 */
+/* 268 */
 /*!*********************************************!*\
   !*** ./~/axios/lib/core/dispatchRequest.js ***!
   \*********************************************/
@@ -29877,10 +29997,10 @@
 	        adapter = config.adapter;
 	      } else if (typeof XMLHttpRequest !== 'undefined') {
 	        // For browsers use XHR adapter
-	        adapter = __webpack_require__(/*! ../adapters/xhr */ 265);
+	        adapter = __webpack_require__(/*! ../adapters/xhr */ 269);
 	      } else if (typeof process !== 'undefined') {
 	        // For node use HTTP adapter
-	        adapter = __webpack_require__(/*! ../adapters/http */ 265);
+	        adapter = __webpack_require__(/*! ../adapters/http */ 269);
 	      }
 	
 	      if (typeof adapter === 'function') {
@@ -29896,7 +30016,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 3)))
 
 /***/ },
-/* 265 */
+/* 269 */
 /*!*************************************!*\
   !*** ./~/axios/lib/adapters/xhr.js ***!
   \*************************************/
@@ -29904,12 +30024,12 @@
 
 	'use strict';
 	
-	var utils = __webpack_require__(/*! ./../utils */ 263);
-	var buildURL = __webpack_require__(/*! ./../helpers/buildURL */ 266);
-	var parseHeaders = __webpack_require__(/*! ./../helpers/parseHeaders */ 267);
-	var transformData = __webpack_require__(/*! ./../helpers/transformData */ 268);
-	var isURLSameOrigin = __webpack_require__(/*! ./../helpers/isURLSameOrigin */ 269);
-	var btoa = window.btoa || __webpack_require__(/*! ./../helpers/btoa */ 270);
+	var utils = __webpack_require__(/*! ./../utils */ 267);
+	var buildURL = __webpack_require__(/*! ./../helpers/buildURL */ 270);
+	var parseHeaders = __webpack_require__(/*! ./../helpers/parseHeaders */ 271);
+	var transformData = __webpack_require__(/*! ./../helpers/transformData */ 272);
+	var isURLSameOrigin = __webpack_require__(/*! ./../helpers/isURLSameOrigin */ 273);
+	var btoa = window.btoa || __webpack_require__(/*! ./../helpers/btoa */ 274);
 	
 	module.exports = function xhrAdapter(resolve, reject, config) {
 	  var requestData = config.data;
@@ -29984,7 +30104,7 @@
 	  // This is only done if running in a standard browser environment.
 	  // Specifically not if we're in a web worker, or react-native.
 	  if (utils.isStandardBrowserEnv()) {
-	    var cookies = __webpack_require__(/*! ./../helpers/cookies */ 271);
+	    var cookies = __webpack_require__(/*! ./../helpers/cookies */ 275);
 	
 	    // Add xsrf header
 	    var xsrfValue = config.withCredentials || isURLSameOrigin(config.url) ?
@@ -30035,7 +30155,7 @@
 
 
 /***/ },
-/* 266 */
+/* 270 */
 /*!*****************************************!*\
   !*** ./~/axios/lib/helpers/buildURL.js ***!
   \*****************************************/
@@ -30043,7 +30163,7 @@
 
 	'use strict';
 	
-	var utils = __webpack_require__(/*! ./../utils */ 263);
+	var utils = __webpack_require__(/*! ./../utils */ 267);
 	
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -30111,7 +30231,7 @@
 
 
 /***/ },
-/* 267 */
+/* 271 */
 /*!*********************************************!*\
   !*** ./~/axios/lib/helpers/parseHeaders.js ***!
   \*********************************************/
@@ -30119,7 +30239,7 @@
 
 	'use strict';
 	
-	var utils = __webpack_require__(/*! ./../utils */ 263);
+	var utils = __webpack_require__(/*! ./../utils */ 267);
 	
 	/**
 	 * Parse headers into an object
@@ -30157,7 +30277,7 @@
 
 
 /***/ },
-/* 268 */
+/* 272 */
 /*!**********************************************!*\
   !*** ./~/axios/lib/helpers/transformData.js ***!
   \**********************************************/
@@ -30165,7 +30285,7 @@
 
 	'use strict';
 	
-	var utils = __webpack_require__(/*! ./../utils */ 263);
+	var utils = __webpack_require__(/*! ./../utils */ 267);
 	
 	/**
 	 * Transform the data for a request or a response
@@ -30186,7 +30306,7 @@
 
 
 /***/ },
-/* 269 */
+/* 273 */
 /*!************************************************!*\
   !*** ./~/axios/lib/helpers/isURLSameOrigin.js ***!
   \************************************************/
@@ -30194,7 +30314,7 @@
 
 	'use strict';
 	
-	var utils = __webpack_require__(/*! ./../utils */ 263);
+	var utils = __webpack_require__(/*! ./../utils */ 267);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -30263,7 +30383,7 @@
 
 
 /***/ },
-/* 270 */
+/* 274 */
 /*!*************************************!*\
   !*** ./~/axios/lib/helpers/btoa.js ***!
   \*************************************/
@@ -30308,7 +30428,7 @@
 
 
 /***/ },
-/* 271 */
+/* 275 */
 /*!****************************************!*\
   !*** ./~/axios/lib/helpers/cookies.js ***!
   \****************************************/
@@ -30316,7 +30436,7 @@
 
 	'use strict';
 	
-	var utils = __webpack_require__(/*! ./../utils */ 263);
+	var utils = __webpack_require__(/*! ./../utils */ 267);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -30370,7 +30490,7 @@
 
 
 /***/ },
-/* 272 */
+/* 276 */
 /*!************************************************!*\
   !*** ./~/axios/lib/core/InterceptorManager.js ***!
   \************************************************/
@@ -30378,7 +30498,7 @@
 
 	'use strict';
 	
-	var utils = __webpack_require__(/*! ./../utils */ 263);
+	var utils = __webpack_require__(/*! ./../utils */ 267);
 	
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -30431,7 +30551,7 @@
 
 
 /***/ },
-/* 273 */
+/* 277 */
 /*!**********************************************!*\
   !*** ./~/axios/lib/helpers/isAbsoluteURL.js ***!
   \**********************************************/
@@ -30454,7 +30574,7 @@
 
 
 /***/ },
-/* 274 */
+/* 278 */
 /*!********************************************!*\
   !*** ./~/axios/lib/helpers/combineURLs.js ***!
   \********************************************/
@@ -30475,7 +30595,7 @@
 
 
 /***/ },
-/* 275 */
+/* 279 */
 /*!*************************************!*\
   !*** ./~/axios/lib/helpers/bind.js ***!
   \*************************************/
@@ -30495,7 +30615,7 @@
 
 
 /***/ },
-/* 276 */
+/* 280 */
 /*!***************************************!*\
   !*** ./~/axios/lib/helpers/spread.js ***!
   \***************************************/
